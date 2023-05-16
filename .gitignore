@@ -1,0 +1,4 @@
+*.log
+height_feet/
+ktd/
+__pycache__/
