@@ -6,15 +6,17 @@ from pop.Pilot import SerBot
 bot = None
 of = None
 person_not_found = None
+person_not_found_cnt = None
 
 def setup():
-    global bot, of, person_not_found
+    global bot, of, person_not_found_cnt, person_not_found
 
     cam = Camera()
     of = Object_Follow(cam)
     bot = SerBot()
 
-    person_not_found = 0
+    person_not_found = False
+    person_not_found_cnt = 0
 
     of.load_model()
     print("="*50)
@@ -22,43 +24,42 @@ def setup():
     print("It starts in about 10 seconds.")
 
 def loop():
-    global person_not_found
+    global person_not_found_cnt, pre_rate, person_not_found
 
     person = of.detect(index='person')
     if person:
-        person_not_found = 0
+        person_not_found_cnt = 0
+        person_not_found = False
         x = round(person['x'] * 4, 1)
         rate = round(person['size_rate'], 1)
 
-        # bot.steering =  1.0 if x > 1.0 else -1.0 if x < -1.0 else x
+        bot.steering =  1.0 if x > 1.0 else -1.0 if x < -1.0 else x
 
-        # if rate < 0.2:
-        #     bot.forward(80)
-        # elif rate < 0.4:
-        #     bot.forward(60)
-        # # elif rate < 0.6:
-        # #     bot.forward(40)
-        # else:
-        #     bot.steering = 0
-        #     bot.stop()
-        
-        if rate > 0.2:
+        if rate > 0.4:
+            person_not_found = True
             bot.stop()
-        else:
+        elif rate > 0.3:
+            bot.forward(40)
+        elif rate > 0.2:
             bot.forward(60)
-            bot.steering =  1.0 if x > 1.0 else -1.0 if x < -1.0 else x
- 
-        print(f"{rate}, {bot.steering}")            
+        else:
+            bot.forward(80)
+
+        print(f"{rate}, {bot.steering}")
     else:
-        if person_not_found == 0:
-            bot.setSpeed(50)
-            if bot.steering < 0:
-                bot.turnLeft()
-                time.sleep(0.3)
-            elif bot.steering > 0:
-                bot.turnRight()
-                time.sleep(0.3)
-            person_not_found = 1
+        if person_not_found == False:
+            person_not_found_cnt += 1
+            if person_not_found_cnt > 5:
+                bot.setSpeed(50)
+                if bot.steering < 0:
+                    bot.turnLeft()
+                    time.sleep(0.3)
+                elif bot.steering > 0:
+                    bot.turnRight()
+                    time.sleep(0.3)
+                else:
+                    bot.stop()
+                person_not_found = True
         bot.stop()
         print("person not dectected...")  
  
