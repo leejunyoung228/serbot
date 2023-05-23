@@ -18,6 +18,7 @@ while True:
         print(round(person['x'],1), round(person['size_rate'],1))
         steer = round(person['x'],1) * 3.5
         limit = round(person['size_rate'],1)
+        bot.forward(50)
         bot.steering = -1.0 if steer < -1.0 else 1.0 if steer > 1.0 else steer
         if limit < 0.2:
             bot.stop()
