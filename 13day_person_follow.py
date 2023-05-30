@@ -33,7 +33,7 @@ def loop():
     point_frame = lidar.getVectors()
     detect = forward_detect(point_frame)
     if detect:
-        print("stop")
+        print("Lidar detected!!! bot stop")
         bot.stop()
     else:
         person = of.detect(index='person')
@@ -49,14 +49,13 @@ def loop():
                 person_not_found = True
                 bot.stop()
             elif rate > 0.3:
-                bot.forward(40)
+                bot.forward(25)
             elif rate > 0.2:
-                bot.forward(60)
+                bot.forward(50)
             elif rate > 0.1:
-                bot.forward(70)
+                bot.forward(60)
             else:
                 bot.forward(80)
-
             print(f"{rate}, {bot.steering}")
         else:
             if person_not_found == False:
