@@ -5,18 +5,15 @@ from pop.Pilot import SerBot
 
 bot = None
 of = None
-person_not_found = None
-person_not_found_cnt = None
+person_not_found = False
+person_not_found_cnt = 0
 
 def setup():
-    global bot, of, person_not_found_cnt, person_not_found
+    global bot, of
 
     cam = Camera()
     of = Object_Follow(cam)
     bot = SerBot()
-
-    person_not_found = False
-    person_not_found_cnt = 0
 
     of.load_model()
     print("="*50)
