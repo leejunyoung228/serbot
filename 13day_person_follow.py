@@ -29,7 +29,7 @@ def setup():
     print("It starts in about 10 seconds.")
 
 def loop():
-    global person_not_found_cnt, pre_rate, person_not_found
+    global person_not_found_cnt, person_not_found
     point_frame = lidar.getVectors()
     detect = forward_detect(point_frame)
     if detect:
